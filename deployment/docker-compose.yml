@@ -1,25 +1,5 @@
 version: '3'
 services:
-  app:
-    image: badconfig/droux
-    container_name: rocket-server
-    tty: true
-    ports:
-      - "8000:8000"
-    environment:
-      - DATABASE_URL=postgres://docker:sdfjksfu2jkl45g343b@postgres1:5432/diesel_db
-      - RETAIL_CRM_API_KEY=qZPXO3WaF2LLQI3YEZHdpJLoYZxhHdzH
-      - SBERBANK_USERNAME=T773007004660-api
-      - SBERBANK_PASSWORD=T773007004660
-      - SITE_URL=https://droux.ru
-    volumes:
-          - ./Rocket.toml:/droux/Rocket.toml
-          - ./static/:/droux/static/
-          - ./templates/:/droux/templates/
-          #- ./.env:/droux/.env
-          - ./migrations:/droux/migrations/
-    networks:
-      - app-network
   nginx:
     image: nginx:1.15-alpine
     container_name: nginx
@@ -28,8 +8,6 @@ services:
       - ./data/nginx:/etc/nginx/conf.d
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
-      - ./static/:/var/tools/static/
-      #- ./templates/:/var/tools/templates/
     ports:
       - "80:80"
       - "443:443"
@@ -47,25 +25,7 @@ services:
     networks:
       - app-network
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
-  postgres:
-    image: "postgres:9.6"
-    container_name: postgres1
-    restart: unless-stopped
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: diesel_db
-      POSTGRES_PASSWORD: sdfjksfu2jkl45g343b
-      POSTGRES_USER: docker
-    networks:
-      - app-network
-  cron:
-    image: badconfig/cron
-    container_name: cron
-    restart: unless-stopped
-    networks:
-      - app-network
 networks:
   app-network:
-    driver: bridge
+    external: true
 
