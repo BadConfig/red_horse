@@ -1,5 +1,6 @@
 #[macro_use]
 extern crate diesel;
+extern crate diesel_migrations;
 #[macro_use]
 extern crate lazy_static;
 extern crate r2d2;

@@ -28,6 +28,5 @@ volumes:
   pg_auth:
 networks:
   app-network:
-    driver: bridge
     external: true
 

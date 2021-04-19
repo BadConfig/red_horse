@@ -25,7 +25,7 @@ pub struct JwtClaim {
     pub exp: i64,
 }
 
-#[derive(Serialize,Deserialize)]
+#[derive(Serialize,Deserialize, Clone)]
 pub struct AuthSecret(pub [u8;32]);
 
 impl Auth {

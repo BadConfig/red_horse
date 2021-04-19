@@ -18,6 +18,7 @@ use auth::db::AuthSecret;
 use auth::auth::{
    EngineAuth, 
 };
+use diesel_migrations::run_pending_migrations;
 use serde_json::json;
 extern crate env_logger;
 
@@ -29,15 +30,20 @@ async fn main() -> std::io::Result<()> {
     let pool = r2d2::Pool::builder()
         .build(manager)
         .expect("Failed to create pool.");
-    let secret = std::sync::Arc::new(AuthSecret([0u8;32]));
+    match run_pending_migrations(&pool.get().unwrap()) {
+        Ok(_) => print!("migration success\n"),
+        Err(e)=> print!("migration error: {}\n",&e),
+    };
+
+    let secret = Auth::gen_secret();
     let jwt_guard = EngineAuth::new(secret.clone());
+
     std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
-    let client = std::sync::Arc::new(Client::new());
+
     println!("starting server...");
     HttpServer::new(move || {
         App::new()
-            //.data(client.clone())
             .data(pool.clone())
             .data(secret.clone())
             .wrap(Logger::default())
@@ -49,7 +55,7 @@ async fn main() -> std::io::Result<()> {
             )
             .service(
                 web::resource("/private/{role}/{microservice_name}")
-                    .guard(jwt_guard.role("admin"))
+                    .guard(jwt_guard.clone())
                     .default_service(web::route().to(forward))
             )
     })

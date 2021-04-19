@@ -18,12 +18,11 @@ pub struct UserData {
 use crate::db::AuthSecret;
 
 pub async fn send_jwt(
-    query: web::Query<UserData>,
+    query: web::Json<UserData>,
     conn: web::Data<DbPool>, 
-    //secret: web::Data<AuthSecret>,
+    secret: web::Data<AuthSecret>,
     _req: HttpRequest
 ) -> Result<HttpResponse,ApiError> {
-    let secret = AuthSecret([0u8;32]);
     let conn = conn.get()?;
     let r = HttpResponse::Ok()
         .json(json!({"jwt": Auth::get(
@@ -44,7 +43,7 @@ pub struct NewUser {
 }
 
 pub async fn create_user(
-    form: web::Form<NewUser>,
+    form: web::Json<NewUser>,
     conn: web::Data<DbPool>, 
     _req: HttpRequest
 ) -> Result<HttpResponse,ApiError> {

@@ -7,29 +7,18 @@ use crate::db::{
 
 #[derive(Clone)]
 pub struct EngineAuth {
-    secret: Arc<AuthSecret>,
-}
-
-pub struct Roles {
-   data: EngineAuth,
-   role: String,
+    secret: AuthSecret,
 }
 
 impl EngineAuth {
-    pub fn new(secret: Arc<AuthSecret>) -> Self {
+    pub fn new(secret: AuthSecret) -> Self {
         EngineAuth {
             secret,
         }
     }
-    pub fn role(&self, role: &str) -> Roles {
-        Roles {
-            data: (*self).clone(),
-            role: role.to_owned(),
-        }
-    }   
 }
 
-impl actix_web::guard::Guard for Roles {
+impl actix_web::guard::Guard for EngineAuth {
     fn check(&self, request: &actix_http::RequestHead) -> bool {
         use std::ops::Index;
         let role = request.uri.path();
@@ -44,7 +33,7 @@ impl actix_web::guard::Guard for Roles {
         };
         println!("{:?}",token);
         let user = match token.to_str() {
-            Ok(token) => match Auth::validate_jwt(token,self.data.secret.as_ref()) {
+            Ok(token) => match Auth::validate_jwt(token,&self.secret) {
                 Ok(auth) => auth,
                 Err(_) => return false,
             },
