@@ -1,0 +1,10 @@
+[workspace]
+
+members = [
+    "auth",
+    "products",
+    "admin",
+    "pay",
+    "uploader",
+    "events",
+]

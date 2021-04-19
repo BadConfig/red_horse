@@ -1,0 +1,12 @@
+version: '3'
+services:
+  productsbackend:
+    image: badconfig/red_horse_products 
+    container_name: productsbackend
+    tty: true
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge
+    external: true
