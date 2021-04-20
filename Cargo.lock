@@ -657,6 +657,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "data-encoding"
+version = "2.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3ee2393c4a91429dffb4bedf19f4d6abf27d8a732c8ce4980305d782e5426d57"
+
+[[package]]
 name = "derive_more"
 version = "0.99.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1805,6 +1811,29 @@ name = "regex-syntax"
 version = "0.6.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "24d5f089152e60f62d28b835fbff2cd2e8dc0baf1ac13343bef92ab7eed84548"
+
+[[package]]
+name = "register_login"
+version = "0.1.0"
+dependencies = [
+ "actix-http",
+ "actix-service",
+ "actix-web",
+ "chrono",
+ "data-encoding",
+ "diesel",
+ "diesel_migrations",
+ "env_logger",
+ "futures",
+ "futures-util",
+ "r2d2",
+ "reqwest",
+ "ring",
+ "serde",
+ "serde_json",
+ "tokio-compat-02",
+ "url",
+]
 
 [[package]]
 name = "remove_dir_all"

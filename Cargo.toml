@@ -7,4 +7,5 @@ members = [
     "pay",
     "uploader",
     "events",
+    "register_login",
 ]
